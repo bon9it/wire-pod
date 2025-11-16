@@ -148,8 +148,9 @@ func handleEditCustomIntent(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetCustomIntentsJSON(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
 	if !vars.CustomIntentsExist {
-		http.Error(w, "you must create an intent first", http.StatusBadRequest)
+		w.Write([]byte("[]"))
 		return
 	}
 	customIntentJSONFile, err := os.ReadFile(vars.CustomIntentsPath)
@@ -158,7 +159,6 @@ func handleGetCustomIntentsJSON(w http.ResponseWriter) {
 		logger.Println(err)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(customIntentJSONFile)
 }
 
