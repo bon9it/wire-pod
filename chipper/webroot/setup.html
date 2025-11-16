@@ -212,6 +212,9 @@
         <hr class="small-hr">
         <p>Set the speech-to-text language you'd like wire-pod to use.</p>
         <hr class="small-hr">
+        <div id="languageSummary" class="desc"></div>
+        <div id="localeSummary" class="desc"></div>
+        <hr class="small-hr">
         <div id="languageStatus"></div>
         <div id="languageSelectionDiv">
           <div>
@@ -250,6 +253,7 @@
 <script>
   updateWeatherAPI();
   updateKGAPI();
+  refreshLanguageStatus();
 </script>
 
 </html>

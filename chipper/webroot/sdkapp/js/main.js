@@ -386,7 +386,15 @@ function getCurrentSettings() {
 
     var s3 = document.getElementById("currentLocale");
     const s3P = document.createElement("p");
-    document.getElementById(localeS).checked = true;
+    const localeRadio = document.getElementById(localeS);
+    if (localeRadio) {
+      localeRadio.checked = true;
+      s3P.textContent = "Current Locale Setting: " + localeRadio.value + " (" + localeS + ")";
+    } else {
+      s3P.textContent = "Current Locale Setting: " + localeS;
+    }
+    s3.innerHTML = "";
+    s3.appendChild(s3P);
 
     var s4 = document.getElementById("currentTimeSet");
     const s4P = document.createElement("p");

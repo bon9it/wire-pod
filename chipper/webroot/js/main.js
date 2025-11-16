@@ -407,6 +407,7 @@ function setSTTLanguage() {
       } else {
         displayMessage("languageStatus", response);
         getE("languageSelectionDiv").style.display = response.includes("success") ? "block" : "none";
+        refreshLanguageStatus();
       }
     });
 }
@@ -425,6 +426,36 @@ function updateSTTLanguageDownload() {
         }
       });
   }, 500);
+}
+
+function refreshLanguageStatus() {
+  fetch("/api/get_stt_info")
+    .then((response) => response.json())
+    .then((parsed) => {
+      if (!parsed || !parsed.language) {
+        getE("languageSummary").textContent = "Current STT language: unavailable.";
+        return;
+      }
+      const providerName = parsed.provider || parsed.service || "unknown";
+      getE("languageSummary").textContent = `Current STT language: ${parsed.language} (provider: ${providerName})`;
+    })
+    .catch(() => {
+      getE("languageSummary").textContent = "Current STT language: unavailable.";
+    });
+
+  fetch("/api/get_locale_status")
+    .then((response) => response.json())
+    .then((parsed) => {
+      if (!parsed || !parsed.locale || parsed.locale === "unknown") {
+        getE("localeSummary").textContent = "Robot locale: unavailable. Sync settings from the SDK page.";
+        return;
+      }
+      const sourceLabel = parsed.source ? ` (source: ${parsed.source})` : "";
+      getE("localeSummary").textContent = `Robot locale: ${parsed.locale}${sourceLabel}`;
+    })
+    .catch(() => {
+      getE("localeSummary").textContent = "Robot locale: unavailable. Sync settings from the SDK page.";
+    });
 }
 
 function sendRestart() {
@@ -571,6 +602,7 @@ function checkUpdate() {
 
 function showLanguage() {
   toggleVisibility(["section-weather", "section-restart", "section-kg", "section-language"], "section-language", "icon-Language");
+  refreshLanguageStatus();
   fetch("/api/get_stt_info")
     .then((response) => response.json())
     .then((parsed) => {

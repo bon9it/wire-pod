@@ -286,15 +286,23 @@ func DoPlaySound(sound string, robot *vector.Vector) error {
 }
 
 func DoSayText(input string, robot *vector.Vector) error {
-
-	// just before vector speaks
-	removeSpecialCharacters(input)
+	// sanitize characters Vector's TTS cannot pronounce reliably
+	input = removeSpecialCharacters(input)
+	if strings.TrimSpace(input) == "" {
+		return nil
+	}
 
 	if (vars.APIConfig.STT.Language != "en-US" && vars.APIConfig.Knowledge.Provider == "openai") || vars.APIConfig.Knowledge.OpenAIVoiceWithEnglish {
-		err := DoSayText_OpenAI(robot, input)
-		return err
+		if err := DoSayText_OpenAI(robot, input); err == nil {
+			if vars.APIConfig.STT.Language == "vi-VN" {
+				logger.LogUI("Using Vietnamese OpenAI TTS voice for " + robot.Cfg.SerialNo)
+			}
+			return nil
+		} else {
+			logger.Println("OpenAI TTS failed, falling back to Vector voice: " + err.Error())
+		}
 	}
-	robot.Conn.SayText(
+	_, err := robot.Conn.SayText(
 		context.Background(),
 		&vectorpb.SayTextRequest{
 			Text:           input,
@@ -302,7 +310,7 @@ func DoSayText(input string, robot *vector.Vector) error {
 			DurationScalar: 0.95,
 		},
 	)
-	return nil
+	return err
 }
 
 func pcmLength(data []byte) time.Duration {

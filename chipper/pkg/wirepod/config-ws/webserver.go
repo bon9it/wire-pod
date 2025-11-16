@@ -49,6 +49,8 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		handleGetDownloadStatus(w)
 	case "get_stt_info":
 		handleGetSTTInfo(w)
+	case "get_locale_status":
+		handleGetLocaleStatus(w)
 	case "get_config":
 		handleGetConfig(w)
 	case "get_logs":
@@ -263,6 +265,32 @@ func handleGetDownloadStatus(w http.ResponseWriter) {
 func handleGetSTTInfo(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(vars.APIConfig.STT)
+}
+
+func handleGetLocaleStatus(w http.ResponseWriter) {
+	type localeStatus struct {
+		Locale string `json:"locale"`
+		Source string `json:"source"`
+	}
+	status := localeStatus{
+		Locale: "unknown",
+	}
+	for _, jdoc := range vars.BotJdocs {
+		if jdoc.Name != "vic.RobotSettings" {
+			continue
+		}
+		var doc map[string]interface{}
+		if err := json.Unmarshal([]byte(jdoc.Jdoc.JsonDoc), &doc); err != nil {
+			continue
+		}
+		if locale, ok := doc["locale"].(string); ok && strings.TrimSpace(locale) != "" {
+			status.Locale = locale
+			status.Source = jdoc.Thing
+			break
+		}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(status)
 }
 
 func handleGetConfig(w http.ResponseWriter) {
