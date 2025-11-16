@@ -5,6 +5,12 @@ const intentsJson = JSON.parse(
 var GetLog = false;
 
 const getE = (element) => document.getElementById(element);
+const setChecked = (id, value) => {
+  const el = getE(id);
+  if (el) {
+    el.checked = !!value;
+  }
+};
 
 function updateIntentSelection(element) {
   fetch("/api/get_custom_intents_json")
@@ -360,25 +366,25 @@ function updateKGAPI() {
         getE("openaiKey").value = data.key;
         getE("openAIPrompt").value = data.openai_prompt;
         getE("openaiVoice").value = data.openai_voice;
-        getE("commandYes").checked = data.commands_enable
-        getE("intentyes").checked = data.intentgraph
-        getE("saveChatYes").checked = data.save_chat
-        getE("voiceEnglishYes").checked = data.openai_voice_with_english
+        setChecked("commandYes", data.commands_enable)
+        setChecked("intentyes", data.intentgraph)
+        setChecked("saveChatYes", data.save_chat)
+        setChecked("voiceEnglishYes", data.openai_voice_with_english)
       } else if (data.provider === "together") {
         getE("togetherKey").value = data.key;
         getE("togetherModel").value = data.model;
         getE("togetherAIPrompt").value = data.openai_prompt;
-        getE("commandYes").checked = data.commands_enable
-        getE("intentyes").checked = data.intentgraph
-        getE("saveChatYes").checked = data.save_chat
+        setChecked("commandYes", data.commands_enable)
+        setChecked("intentyes", data.intentgraph)
+        setChecked("saveChatYes", data.save_chat)
       } else if (data.provider === "custom") {
         getE("customKey").value = data.key;
         getE("customModel").value = data.model;
         getE("customAIPrompt").value = data.openai_prompt;
         getE("customAIEndpoint").value = data.endpoint;
-        getE("commandYes").checked = data.commands_enable
-        getE("intentyes").checked = data.intentgraph
-        getE("saveChatYes").checked = data.save_chat
+        setChecked("commandYes", data.commands_enable)
+        setChecked("intentyes", data.intentgraph)
+        setChecked("saveChatYes", data.save_chat)
       } else if (data.provider === "houndify") {
         getE("houndKey").value = data.key;
         getE("houndID").value = data.id;
