@@ -23,3 +23,5 @@ require (
 	google.golang.org/grpc v1.40.0
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
+
+replace github.com/digital-dream-labs/api => github.com/bon9it/ddl-api v0.0.0-20251116064632-54a1392f8edf

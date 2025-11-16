@@ -147,6 +147,9 @@ func CreateAIReq(transcribedText, esn string, gpt3tryagain, isKG bool) openai.Ch
 	} else {
 		smsg.Content = defaultPrompt
 	}
+	if vars.APIConfig.STT.Language == "vi-VN" {
+		smsg.Content = smsg.Content + "\n\nHãy trả lời toàn bộ phản hồi bằng tiếng Việt tự nhiên."
+	}
 
 	var model string
 

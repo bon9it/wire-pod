@@ -471,6 +471,8 @@ func getLanguage(locale string) (pb.LanguageCode, error) {
 		return pb.LanguageCode_FRENCH, nil
 	case "de":
 		return pb.LanguageCode_GERMAN, nil
+	case "vi":
+		return pb.LanguageCode_VIETNAMESE, nil
 	case "en":
 		break
 	default:

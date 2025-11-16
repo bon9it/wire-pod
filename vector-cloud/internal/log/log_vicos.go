@@ -1,5 +1,5 @@
-//go:build !vicos
-// +build !vicos
+//go:build android && !vicos
+// +build android,!vicos
 
 package log
 
